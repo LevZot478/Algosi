@@ -2,37 +2,46 @@
 #include <vector>
 #include <queue>
 
-int main() {
-    int n, m;
-    std::cin >> n >> m;
+using namespace std;
 
-    std::vector<std::vector<int>> graph(n + 1);
-    for (int i = 0; i < m; ++i) {
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int n, m;
+    cin >> n >> m;
+
+    vector<vector<int>> adj(n + 1);
+    for (int i = 0; i < m; i++) {
         int u, v;
-        std::cin >> u >> v;
-        graph[u].push_back(v);
-        graph[v].push_back(u);
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
 
-    std::vector<int> dist(n + 1, -1);
-    std::queue<int> q;
-    dist[1] = 0;
-    q.push(1);
+    vector<int> dist(n + 1, -1);
+    queue<int> bfsQueue;
 
-    while (!q.empty()) {
-        int x = q.front();
-        q.pop();
-        for (int to : graph[x]) {
-            if (dist[to] == -1) {
-                dist[to] = dist[x] + 1;
-                q.push(to);
+    dist[1] = 0;
+    bfsQueue.push(1);
+
+    while (!bfsQueue.empty()) {
+        int cur = bfsQueue.front();
+        bfsQueue.pop();
+
+        for (int next : adj[cur]) {
+            if (dist[next] == -1) {
+                dist[next] = dist[cur] + 1;
+                bfsQueue.push(next);
             }
         }
     }
 
-    for (int i = 1; i <= n; ++i) {
-        std::cout << dist[i];
-        if (i < n) std::cout << ' ';
+    for (int i = 1; i <= n; i++) {
+        if (i > 1) cout << ' ';
+        cout << dist[i];
     }
-    std::cout << '\n';
+    cout << endl;
+
+    return 0;
 }
